@@ -1,0 +1,11 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache/options directory
+.vs/
+.vscode/
+
+# MSTest test results
+[Tt]est[Rr]esult*/
+
