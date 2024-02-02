@@ -25,9 +25,17 @@ public class Startup
         
         IConfiguration config = builder.Build();
 
+        PromptSettings = config.GetSection("PromptSettings").Get<PromptSettings>();
         ApiSettings = config.GetSection("ApiSettings").Get<ApiSettings>();
+        TtsSettings = config.GetSection("TtsSettings").Get<TtsSettings>();
     }
 
+    public PromptSettings PromptSettings
+    { get; private set; }
+
     public ApiSettings ApiSettings
+    { get; private set; }
+
+    public TtsSettings TtsSettings
     { get; private set; }
 }
