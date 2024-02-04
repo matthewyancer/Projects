@@ -20,7 +20,7 @@ using Azure.AI.OpenAI;
 namespace May.Jarvis;
 internal class Program
 {
-    private static Dictionary<int, Process> m_TtsProcesses = new();
+    private static readonly Dictionary<int, Process> m_TtsProcesses = new();
 
     private static async Task Main(string[] args)
     {
@@ -29,19 +29,11 @@ internal class Program
         Console.WriteLine("## Jarvis Chat ##");
         Console.WriteLine();
 
-        string? userName = startup.PromptSettings.UserName;
-        if (string.IsNullOrEmpty(userName))
-            userName = "Mr. Stark";
-
-        string? userHonorific = startup.PromptSettings.UserHonorific;
-        if (string.IsNullOrEmpty(userHonorific))
-            userHonorific = "sir";
-
         StringBuilder prompt = new StringBuilder()
             .Append("Please act as an AI assistant named Jarvis and provide responses in the style of Jarvis from the Iron Man movies. ")
             .Append("Include a slight amount of wit in responses, and dry sarcasm 5% of the time. ")
-            .Append("Keep responses shorter and limit to 300 tokens. ")
-            .Append($"My name is {userName}. You can refer to me by name or as {userHonorific}. ")
+            .Append($"Keep responses shorter and limit to {startup.ApiSettings.MaxTokens} tokens. ")
+            .Append($"My name is {startup.PromptSettings.UserName}. You can refer to me by name or as {startup.PromptSettings.UserHonorific}. ")
             .Append("Do not prompt user about \"further assistance\". ");
 
         List<ChatRequestMessage> messageHistory = new()
@@ -71,7 +63,7 @@ internal class Program
 
             messageHistory.Add(new ChatRequestUserMessage(userInput));
 
-            string assistantResponse = await GetOpenAiResponseAsync(messageHistory.ToArray(), startup.ApiSettings.OpenAiKey);
+            string assistantResponse = await GetOpenAiResponseAsync(messageHistory.ToArray(), startup.ApiSettings);
 
             messageHistory.Add(new ChatRequestAssistantMessage(assistantResponse));
 
@@ -100,22 +92,34 @@ internal class Program
             ttsProcess.Kill();
     }
 
-    private static async Task<string> GetOpenAiResponseAsync(ChatRequestMessage[] messageHistory, string? openAiKey)
+    private static async Task<string> GetOpenAiResponseAsync(ChatRequestMessage[] messageHistory, ApiSettings apiSettings)
     {
         //Setup OpenAI chat options
         ChatCompletionsOptions chatOptions = new()
         {
             DeploymentName = "gpt-3.5-turbo-1106",
-            MaxTokens = 300,
+            MaxTokens = Convert.ToInt32(apiSettings.MaxTokens),
             Temperature = 0.7f,
             ChoiceCount = 1
         };
 
-        foreach (var message in messageHistory)
-            chatOptions.Messages.Add(message);
+        foreach (ChatRequestMessage message in messageHistory)
+        {
+            ChatRequestMessage messageToAdd = message;
+
+            if(messageToAdd.Role == ChatRole.System)
+            {
+                DateTime now = DateTime.Now;
+                string dateTimeRule = $"Current time is {now.ToShortTimeString()}. Today's date is {now.Date.ToShortDateString()}. It is {now.DayOfWeek}. ";
+
+                messageToAdd = new ChatRequestSystemMessage($"{((ChatRequestSystemMessage)messageToAdd).Content} {dateTimeRule}");
+            }
+
+            chatOptions.Messages.Add(messageToAdd);
+        }
 
         //Send to OpenAI
-        OpenAIClient openAiClient = new(openAiKey);
+        OpenAIClient openAiClient = new(apiSettings.OpenAiKey);
         Azure.Response<ChatCompletions> openAiResponse = await openAiClient.GetChatCompletionsAsync(chatOptions);
         string assistantResponse = openAiResponse.Value.Choices[0].Message.Content;
 
@@ -126,19 +130,11 @@ internal class Program
     {
         KillTtsProcesses();
 
-        string? speed = ttsSettings.Speed;
-        if (string.IsNullOrEmpty(speed))
-            speed = "162";
-
-        string? volume = ttsSettings.Volume;
-        if (string.IsNullOrEmpty(volume))
-            volume = "90";
-
         string phoneticText = ApplyPhoneticRules(text);
 
         Process textToSpeech = new();
         textToSpeech.StartInfo.FileName = "espeak-ng";
-        textToSpeech.StartInfo.Arguments = $"-v en-gb-x-rp -s {speed} -a {volume} \"{phoneticText.Replace("\"", string.Empty)}\"";
+        textToSpeech.StartInfo.Arguments = $"-v en-gb-x-rp -s {ttsSettings.Speed} -a {ttsSettings.Volume} \"{phoneticText.Replace("\"", string.Empty)}\"";
         textToSpeech.Exited += new EventHandler(TtsProcess_Exited);
         textToSpeech.Start();
         

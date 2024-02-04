@@ -15,6 +15,22 @@
 namespace May.Jarvis;
 public class ApiSettings
 {
-    public string? OpenAiKey
+    private string m_MaxTokens = "300";
+
+    public string? OpenAiKey    //no default
     { get; set; }
+
+    public string? MaxTokens
+    {
+        get
+        {
+            return m_MaxTokens;
+        }
+
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+                m_MaxTokens = value;
+        }
+    }
 }

@@ -15,9 +15,34 @@
 namespace May.Jarvis;
 public class TtsSettings
 {
+    private string m_Speed = "162";
+    private string m_Volume = "90";
+
     public string? Speed
-    { get; set; }
+    {
+        get
+        {
+            return m_Speed;
+        }
+
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+                m_Speed = value;
+        }
+    }
 
     public string? Volume
-    { get; set; }
+    {
+        get
+        {
+            return m_Volume;
+        }
+
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+                m_Volume = value;
+        }
+    }
 }

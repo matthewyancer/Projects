@@ -25,9 +25,12 @@ public class Startup
         
         IConfiguration config = builder.Build();
 
-        PromptSettings = config.GetSection("PromptSettings").Get<PromptSettings>();
-        ApiSettings = config.GetSection("ApiSettings").Get<ApiSettings>();
-        TtsSettings = config.GetSection("TtsSettings").Get<TtsSettings>();
+        PromptSettings = config.GetSection("PromptSettings").Get<PromptSettings>() ?? new PromptSettings();
+        ApiSettings = config.GetSection("ApiSettings").Get<ApiSettings>() ?? new ApiSettings();
+        TtsSettings = config.GetSection("TtsSettings").Get<TtsSettings>() ?? new TtsSettings();
+
+        if(string.IsNullOrEmpty(ApiSettings.OpenAiKey))
+            throw new Exception("Missing required setting \"ApiSettings.OpenAiKey\" from appsettings.json file.");
     }
 
     public PromptSettings PromptSettings

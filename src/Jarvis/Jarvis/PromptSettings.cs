@@ -15,9 +15,34 @@
 namespace May.Jarvis;
 public class PromptSettings
 {
+    private string m_UserName = "Mr. Stark";
+    private string m_UserHonorific = "sir";
+
     public string? UserName
-    { get; set; }
+    {
+        get
+        {
+            return m_UserName;
+        }
+        
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+                m_UserName = value;
+        }
+    }
 
     public string? UserHonorific
-    { get; set; }
+    {
+        get
+        {
+            return m_UserHonorific;
+        }
+
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+                m_UserHonorific = value;
+        }
+    }
 }
