@@ -13,24 +13,17 @@
 // limitations under the License.
 
 namespace May.Jarvis;
-public class ApiSettings
+public class SpeechToText
 {
-    private string m_MaxTokens = "300";
-
-    public string? OpenAiKey    //no default
-    { get; set; }
-
-    public string? MaxTokens
+    public void PushToTalkPressing(object? sender, EventArgs e)
     {
-        get
-        {
-            return m_MaxTokens;
-        }
+        //TO-DO
+    }
 
-        set
-        {
-            if (!string.IsNullOrEmpty(value))
-                m_MaxTokens = value;
-        }
+    public string? PushToTalkPressed(object? sender, EventArgs e)
+    {
+        //TO-DO
+
+        return null;
     }
 }

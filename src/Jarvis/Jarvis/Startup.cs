@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Microsoft.Extensions.Configuration;
+using May.Jarvis.Settings;
 
 namespace May.Jarvis;
 public class Startup
@@ -25,20 +26,20 @@ public class Startup
         
         IConfiguration config = builder.Build();
 
-        PromptSettings = config.GetSection("PromptSettings").Get<PromptSettings>() ?? new PromptSettings();
-        ApiSettings = config.GetSection("ApiSettings").Get<ApiSettings>() ?? new ApiSettings();
-        TtsSettings = config.GetSection("TtsSettings").Get<TtsSettings>() ?? new TtsSettings();
+        PromptSettings = config.GetSection("Prompt").Get<PromptSettings>() ?? new PromptSettings();
+        OpenAiSettings = config.GetSection("OpenAi").Get<OpenAiSettings>() ?? new OpenAiSettings();
+        TextToSpeechSettings = config.GetSection("TextToSpeech").Get<TextToSpeechSettings>() ?? new TextToSpeechSettings();
 
-        if(string.IsNullOrEmpty(ApiSettings.OpenAiKey))
-            throw new Exception("Missing required setting \"ApiSettings.OpenAiKey\" from appsettings.json file.");
+        if(string.IsNullOrEmpty(OpenAiSettings.OpenAiKey))
+            throw new Exception("Missing required setting \"OpenAi.OpenAiKey\" from appsettings.json file.");
     }
 
     public PromptSettings PromptSettings
     { get; private set; }
 
-    public ApiSettings ApiSettings
+    public OpenAiSettings OpenAiSettings
     { get; private set; }
 
-    public TtsSettings TtsSettings
+    public TextToSpeechSettings TextToSpeechSettings
     { get; private set; }
 }

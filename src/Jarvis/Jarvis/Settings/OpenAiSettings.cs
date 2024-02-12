@@ -1,4 +1,4 @@
-﻿// Copyright 2024 Matthew Yancer
+// Copyright 2024 Matthew Yancer
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,37 +12,55 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace May.Jarvis;
-public class TtsSettings
+namespace May.Jarvis.Settings;
+public class OpenAiSettings
 {
-    private string m_Speed = "162";
-    private string m_Volume = "90";
+    private string m_Model = "gpt-3.5-turbo-0125";  //see https://platform.openai.com/docs/models/overview
+    private string m_MaxTokens = "300";
+    private string m_Temperature = "0.7";
 
-    public string? Speed
+    public string? OpenAiKey    //no default
+    { get; set; }
+
+    public string? Model
     {
         get
         {
-            return m_Speed;
+            return m_Model;
         }
 
         set
         {
             if (!string.IsNullOrEmpty(value))
-                m_Speed = value;
+                m_Model = value;
         }
     }
 
-    public string? Volume
+    public string? MaxTokens
     {
         get
         {
-            return m_Volume;
+            return m_MaxTokens;
         }
 
         set
         {
             if (!string.IsNullOrEmpty(value))
-                m_Volume = value;
+                m_MaxTokens = value;
+        }
+    }
+
+    public string? Temperature
+    {
+        get
+        {
+            return m_Temperature;
+        }
+
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+                m_Temperature = value;
         }
     }
 }
