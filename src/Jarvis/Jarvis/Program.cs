@@ -23,6 +23,8 @@ internal class Program
     {
         Startup startup = new();
         Input input = new();
+        SoundMixer soundMixer = new();
+        Microphone microphone = new();
         SpeechToText speechToText = new();
         TextToSpeech textToSpeech = new(startup.TextToSpeechSettings);
 
@@ -83,6 +85,7 @@ internal class Program
         {
             input.Dispose();
             textToSpeech.Dispose();
+            microphone.Dispose();
         }
     }
 

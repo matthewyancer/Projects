@@ -143,8 +143,9 @@ public class Input : IDisposable
         {
             var nextKey = Console.ReadKey(true);
 
-            if ((nextKey.Key == ConsoleKey.Backspace) && (inputBuffer.Count > 0))    //handle backspace
+            if ((nextKey.Key == ConsoleKey.Backspace) && (inputBuffer.Count > 0))
             {
+                //handle backspace
                 inputBuffer.RemoveAt(inputBuffer.Count - 1);
 
                 ConsoleBackspace();
@@ -152,8 +153,9 @@ public class Input : IDisposable
                 if (inputBuffer.Count == 0)
                     break;
             }
-            else if (nextKey.Key == ConsoleKey.Enter)   //finished entering message
+            else if (nextKey.Key == ConsoleKey.Enter)
             {
+                //finished entering message
                 userInput = new string(inputBuffer.ToArray());
 
                 Console.WriteLine();
@@ -162,8 +164,9 @@ public class Input : IDisposable
             }
             else
             {
-                if ((nextKey.KeyChar != 0) && (nextKey.Key != ConsoleKey.Tab))   //add visible characters to buffer
+                if ((nextKey.KeyChar != 0) && (nextKey.Key != ConsoleKey.Tab))
                 {
+                    //add visible characters to buffer
                     inputBuffer.Add(nextKey.KeyChar);
                     Console.Write(nextKey.KeyChar);
                 }
