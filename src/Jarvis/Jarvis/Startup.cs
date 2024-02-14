@@ -29,6 +29,7 @@ public class Startup
         PromptSettings = config.GetSection("Prompt").Get<PromptSettings>() ?? new PromptSettings();
         OpenAiSettings = config.GetSection("OpenAi").Get<OpenAiSettings>() ?? new OpenAiSettings();
         TextToSpeechSettings = config.GetSection("TextToSpeech").Get<TextToSpeechSettings>() ?? new TextToSpeechSettings();
+        SpeechToTextSettings = config.GetSection("SpeechToText").Get<SpeechToTextSettings>() ?? new SpeechToTextSettings();
 
         if(string.IsNullOrEmpty(OpenAiSettings.OpenAiKey))
             throw new Exception("Missing required setting \"OpenAi.OpenAiKey\" from appsettings.json file.");
@@ -41,5 +42,8 @@ public class Startup
     { get; private set; }
 
     public TextToSpeechSettings TextToSpeechSettings
+    { get; private set; }
+
+    public SpeechToTextSettings SpeechToTextSettings
     { get; private set; }
 }

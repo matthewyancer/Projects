@@ -25,7 +25,7 @@ internal class Program
         Input input = new();
         SoundMixer soundMixer = new();
         Microphone microphone = new();
-        SpeechToText speechToText = new();
+        SpeechToText speechToText = new(soundMixer, microphone, startup.SpeechToTextSettings, startup.OpenAiSettings.OpenAiKey);
         TextToSpeech textToSpeech = new(startup.TextToSpeechSettings);
 
         input.PushToTalkPressing += speechToText.PushToTalkPressing;
@@ -125,6 +125,7 @@ internal class Program
 
     private static void Display(string text)
     {
+        Console.WriteLine();
         Console.WriteLine(text);
         Console.WriteLine();
     }
